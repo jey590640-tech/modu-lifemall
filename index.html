@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>모두의 라이프몰 특가세일방</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #f6f7f9;
+      font-family: Arial, "Malgun Gothic", sans-serif;
+      color: #222;
+    }
+    header {
+      background: #1768c4;
+      color: white;
+      padding: 28px 16px;
+      text-align: center;
+    }
+    header h1 { margin: 0 0 10px; font-size: 26px; }
+    header p { margin: 0; font-size: 15px; }
+    main { max-width: 760px; margin: auto; padding: 20px 14px; }
+    .notice, .product {
+      background: white;
+      padding: 20px;
+      margin-bottom: 16px;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px #00000010;
+    }
+    .notice { line-height: 1.8; }
+    .product h2 { margin-top: 8px; font-size: 21px; }
+    .price { color: #d62828; font-size: 25px; font-weight: bold; }
+    .status { color: #1768c4; font-weight: bold; }
+    button {
+      background: #1768c4;
+      color: white;
+      border: none;
+      padding: 13px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:disabled { background: #999; cursor: not-allowed; }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 6px 0 14px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      font-size: 16px;
+    }
+    label { font-weight: bold; }
+    .hidden { display: none; }
+    footer { text-align: center; padding: 20px; color: #666; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>모두의 라이프몰</h1>
+    <p>좋은 상품을 좋은 가격에! 특가세일방</p>
+  </header>
+
+  <main>
+    <section class="notice">
+      <h2>📢 이용 안내</h2>
+      <p>
+        상품 예약 후 안내된 계좌로 입금하는 방식입니다.<br>
+        입금 확인 후 예약이 확정됩니다.<br>
+        상품 수령 장소: 인천 서구 가좌동<br>
+        정확한 수령 장소와 일정은 별도로 안내합니다.
+      </p>
+      <p><strong>※ 현재 홈페이지는 기능 시험용입니다.</strong></p>
+    </section>
+
+    <section class="product">
+      <p class="status">● 예약 연습 중</p>
+      <h2>🥩 특가 수제 스테이크 300g</h2>
+      <p class="price">5,900원</p>
+      <p>예약 마감: 추후 공지</p>
+      <p>수령 기간: 추후 공지</p>
+      <button onclick="showOrder()">예약 연습하기</button>
+    </section>
+
+    <section class="product">
+      <p class="status">● 상품 준비 중</p>
+      <h2>🍎 신선 과일 특가 상품</h2>
+      <p>가격과 예약 일정은 추후 공개됩니다.</p>
+      <button disabled>준비 중</button>
+    </section>
+
+    <section id="order" class="product hidden">
+      <h2>📝 예약 연습 신청서</h2>
+      <p>실제 주문이 접수되지 않는 연습 화면입니다.</p>
+
+      <label for="name">예약자 이름</label>
+      <input id="name" placeholder="이름 입력">
+
+      <label for="phone">휴대폰 번호 끝 4자리</label>
+      <input id="phone" maxlength="4"
+             inputmode="numeric" placeholder="예: 1234">
+
+      <label for="qty">예약 수량</label>
+      <input id="qty" type="number" min="1" value="1">
+
+      <button onclick="previewOrder()">예약 내용 확인</button>
+      <p id="result"></p>
+    </section>
+  </main>
+
+  <footer>
+    모두의 라이프몰 특가세일방<br>
+    © 2026 모두의 라이프몰
+  </footer>
+
+  <script>
+    function showOrder() {
+      document.getElementById("order").classList.remove("hidden");
+      document.getElementById("order").scrollIntoView({
+        behavior: "smooth"
+      });
+    }
+
+    function previewOrder() {
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const qty = Number(document.getElementById("qty").value);
+      const result = document.getElementById("result");
+
+      if (!name || !/^[0-9]{4}$/.test(phone) ||
+          !Number.isInteger(qty) || qty < 1) {
+        result.textContent =
+          "이름, 휴대폰 끝 4자리, 수량을 확인해 주세요.";
+        return;
+      }
+
+      result.textContent =
+        name + "님 (" + phone + ") / " +
+        qty + "개 / 합계 " +
+        (qty * 5900).toLocaleString("ko-KR") +
+        "원. 연습용으로 실제 예약은 저장되지 않습니다.";
+    }
+  </script>
+</body>
+</html>
