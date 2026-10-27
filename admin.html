@@ -6,28 +6,115 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>모두의 라이프몰 관리자</title>
 <style>
-body {font-family:Arial,sans-serif; background:#f3f5f8; padding:20px;}
-main {max-width:600px; margin:auto;}
-h1 {color:#1768bd;}
-section {background:white; padding:20px; margin:15px 0; border-radius:12px;}
+body{font-family:Arial,sans-serif;background:#f3f5f8;margin:0;padding:20px;color:#222}
+main{max-width:700px;margin:auto}
+h1{text-align:center;color:#1768bd}
+section{background:white;padding:22px;margin:18px 0;border-radius:14px;box-shadow:0 2px 8px #ddd}
+label{display:block;font-weight:bold;margin-top:15px}
+input{box-sizing:border-box;width:100%;padding:12px;margin-top:6px;border:1px solid #ccc;border-radius:8px;font-size:16px}
+button{background:#1768bd;color:white;border:0;border-radius:8px;padding:13px 20px;margin-top:20px;font-size:16px;cursor:pointer}
+.item{border-bottom:1px solid #ddd;padding:15px 0}
+small{color:#666}
+.notice{color:#b42318}
 </style>
 </head>
 <body>
 <main>
 <h1>모두의 라이프몰 관리자</h1>
 <section>
-<h2>상품 관리</h2>
-<p>상품 등록 기능을 준비하고 있습니다.</p>
+<h2>상품 등록 연습</h2>
+<p class="notice">현재는 기능 시험용입니다. 실제 주문은 접수되지 않습니다.</p>
+<form id="productForm">
+<label>상품명
+<input id="name" required placeholder="예: 특가 수제 스테이크 300g">
+</label>
+<label>판매가격 (원)
+<input id="price" type="number" min="1" required>
+</label>
+<label>판매 가능 수량
+<input id="stock" type="number" min="1" required>
+</label>
+<label>예약 마감일
+<input id="deadline" type="date" required>
+</label>
+<label>수령 시작일
+<input id="pickupStart" type="date" required>
+</label>
+<label>수령 종료일
+<input id="pickupEnd" type="date" required>
+</label>
+<button type="submit">연습 상품 등록</button>
+</form>
 </section>
 <section>
-<h2>예약 관리</h2>
-<p>고객 예약 조회 기능을 준비하고 있습니다.</p>
+<h2>등록한 연습 상품</h2>
+<p><small>이 브라우저에만 임시 보관됩니다. 고객 홈페이지에는 자동으로 표시되지 않습니다.</small></p>
+<div id="products"></div>
 </section>
-<section>
-<h2>입금 및 수령 관리</h2>
-<p>입금 확인과 수령 처리 기능을 준비하고 있습니다.</p>
-</section>
-<p>※ 현재는 화면 확인용 연습 페이지입니다.</p>
 </main>
+<script>
+const key="lifemall-practice-products";
+const form=document.getElementById("productForm");
+const list=document.getElementById("products");
+let products=[];
+try{
+products=JSON.parse(localStorage.getItem(key)||"[]");
+if(!Array.isArray(products))products=[];
+}catch(e){products=[];}
+
+function showProducts(){
+list.replaceChildren();
+if(products.length===0){
+list.textContent="아직 등록한 연습 상품이 없습니다.";
+return;
+}
+products.forEach((p,i)=>{
+const div=document.createElement("div");
+div.className="item";
+const title=document.createElement("h3");
+title.textContent=p.name;
+div.appendChild(title);
+const info=document.createElement("p");
+info.textContent=
+Number(p.price).toLocaleString()+"원 / "+
+p.stock+"개 / 예약 마감: "+p.deadline+
+" / 수령: "+p.start+" ~ "+p.end;
+div.appendChild(info);
+const remove=document.createElement("button");
+remove.type="button";
+remove.textContent="연습 상품 삭제";
+remove.onclick=()=>{
+products.splice(i,1);
+save();
+};
+div.appendChild(remove);
+list.appendChild(div);
+});
+}
+function save(){
+localStorage.setItem(key,JSON.stringify(products));
+showProducts();
+}
+form.addEventListener("submit",e=>{
+e.preventDefault();
+const p={
+name:document.getElementById("name").value.trim(),
+price:Number(document.getElementById("price").value),
+stock:Number(document.getElementById("stock").value),
+deadline:document.getElementById("deadline").value,
+start:document.getElementById("pickupStart").value,
+end:document.getElementById("pickupEnd").value
+};
+if(p.start>p.end){
+alert("수령 종료일은 시작일보다 빠를 수 없습니다.");
+return;
+}
+products.push(p);
+save();
+form.reset();
+alert("연습 상품이 등록되었습니다.");
+});
+showProducts();
+</script>
 </body>
 </html>
