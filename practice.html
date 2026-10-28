@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>모두의 라이프몰 연결 연습</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f3f5f8;padding:20px;color:#222}
+main{max-width:700px;margin:auto}
+section{background:white;padding:20px;margin:16px 0;border-radius:12px}
+input{display:block;box-sizing:border-box;width:100%;padding:12px;margin:8px 0 14px}
+button{background:#1768bd;color:white;border:0;border-radius:7px;padding:12px;margin:8px 0;cursor:pointer}
+</style>
+</head>
+<body>
+<main>
+<h1>모두의 라이프몰 연결 연습</h1>
+<p>시험용 화면입니다. 실제 예약은 접수되지 않습니다.</p>
+<section>
+<h2>① 관리자 상품 등록</h2>
+<label>상품명<input id="product" placeholder="예: 특가 스테이크 300g"></label>
+<label>가격(원)<input id="price" type="number" min="1"></label>
+<label>판매 수량<input id="stock" type="number" min="1"></label>
+<button onclick="addProduct()">연습 상품 등록</button>
+</section>
+<section>
+<h2>② 고객 예약 연습</h2>
+<div id="display">아직 등록된 상품이 없습니다.</div>
+<label>예약자 이름<input id="customer"></label>
+<label>휴대폰 끝 4자리<input id="phone" maxlength="4" inputmode="numeric"></label>
+<label>예약 수량<input id="qty" type="number" min="1" value="1"></label>
+<button onclick="reserve()">예약 연습하기</button>
+<p id="message"></p>
+</section>
+<section>
+<h2>③ 관리자 예약 확인</h2>
+<div id="orders">아직 예약 연습 내역이 없습니다.</div>
+</section>
+</main>
+<script>
+let product=null;
+let orders=[];
+const won=n=>n.toLocaleString("ko-KR")+"원";
+function addProduct(){
+const name=document.getElementById("product").value.trim();
+const price=Number(document.getElementById("price").value);
+const stock=Number(document.getElementById("stock").value);
+if(!name||price<=0||!Number.isInteger(stock)||stock<1){alert("상품명, 가격, 수량을 확인해 주세요.");return;}
+product={name,price,stock};
+orders=[];
+render();
+alert("연습 상품이 등록되었습니다.");
+}
+function reserve(){
+const name=document.getElementById("customer").value.trim();
+const phone=document.getElementById("phone").value.trim();
+const qty=Number(document.getElementById("qty").value);
+const message=document.getElementById("message");
+if(!product){message.textContent="상품을 먼저 등록하세요.";return;}
+if(!name||!/^\d{4}$/.test(phone)||!Number.isInteger(qty)||qty<1){message.textContent="예약자 정보와 수량을 확인하세요.";return;}
+const reserved=orders.reduce((sum,o)=>sum+o.qty,0);
+if(qty>product.stock-reserved){message.textContent="남은 수량이 부족합니다.";return;}
+orders.push({name,phone,qty});
+message.textContent=name+"님, "+won(qty*product.price)+" 예약 연습 완료!";
+render();
+}
+function render(){
+const display=document.getElementById("display");
+const ordersBox=document.getElementById("orders");
+display.textContent=product?product.name+" / "+won(product.price)+" / 남은 수량 "+(product.stock-orders.reduce((s,o)=>s+o.qty,0))+"개":"아직 등록된 상품이 없습니다.";
+ordersBox.replaceChildren();
+if(!orders.length){ordersBox.textContent="아직 예약 연습 내역이 없습니다.";return;}
+orders.forEach(o=>{
+const p=document.createElement("p");
+p.textContent=o.name+" ("+o.phone+") / "+o.qty+"개 / "+won(o.qty*product.price);
+ordersBox.appendChild(p);
+});
+}
+</script>
+</body>
+</html>
