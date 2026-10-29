@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>모두의 라이프몰 예약 연습 2단계</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:480px;margin:30px auto;padding:20px;background:#f7f8fa}
+main{background:white;padding:24px;border-radius:14px}
+h2{color:#245c46}label{display:block;margin-top:16px;font-weight:bold}
+input{width:100%;box-sizing:border-box;padding:12px;margin-top:6px;font-size:16px}
+button{margin-top:22px;padding:14px;width:100%;background:#245c46;color:white;border:0;border-radius:8px;font-size:17px}
+#result{margin-top:20px;line-height:1.8;white-space:pre-line}
+small{color:#666}
+</style>
+</head>
+<body>
+<main>
+<h2>모두의 라이프몰 특가세일방</h2>
+<p>예약 연습용 화면 (2단계)</p>
+<h3>달잠 베개 고급형</h3>
+<p>가격: 13,900원 / 1인 최대 5개</p>
+<label for="qty">예약 수량</label>
+<input id="qty" type="number" min="1" max="5" value="1">
+<label for="customer">예약자 이름</label>
+<input id="customer" autocomplete="name" placeholder="이름 입력">
+<label for="phone">휴대전화번호</label>
+<input id="phone" type="tel" inputmode="numeric" placeholder="01012345678">
+<label for="payer">입금자명</label>
+<input id="payer" placeholder="입금하실 분의 이름">
+<button onclick="reserve()">예약 내용 확인하기</button>
+<p id="result" role="status"></p>
+<small>연습용입니다. 실제 예약 접수, 정보 저장, 입금 처리는 되지 않습니다. 시험할 때는 가상 이름과 번호를 사용하세요.</small>
+</main>
+<script>
+function reserve(){
+const q=Number(document.getElementById('qty').value);
+const name=document.getElementById('customer').value.trim();
+const phone=document.getElementById('phone').value.replace(/[^0-9]/g,'');
+const payer=document.getElementById('payer').value.trim();
+const result=document.getElementById('result');
+if(!Number.isInteger(q)||q<1||q>5){result.textContent='수량은 1~5개로 입력하세요.';return;}
+if(!name||!payer||!/^01[016789][0-9]{7,8}$/.test(phone)){result.textContent='이름, 휴대전화번호, 입금자명을 확인해 주세요.';return;}
+result.textContent='예약 내용 확인 완료!\n상품: 달잠 베개\n수량: '+q+'개\n금액: '+(q*13900).toLocaleString()+'원\n예약자: '+name+'\n입금자명: '+payer+'\n※ 실제 예약은 저장되지 않았습니다.';
+}
+</script>
+</body>
+</html>
