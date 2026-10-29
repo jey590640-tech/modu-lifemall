@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>모두의 라이프몰 예약 연습</title>
+</head>
+<body style="font-family:sans-serif;padding:24px">
+<h2>모두의 라이프몰 특가세일방</h2>
+<h3>예약 연습용 화면</h3>
+<p>연습 상품: 달잠 베개</p>
+<p>판매가격: 13,900원</p>
+<label>예약 수량:
+<input id="qty" type="number" min="1" max="5" value="1">
+</label>
+<button onclick="reserve()">예약 연습하기</button>
+<p id="result"></p>
+<script>
+function reserve() {
+ const q = Number(document.getElementById("qty").value);
+ document.getElementById("result").textContent =
+ q >= 1 && q <= 5
+ ? "예약 연습 완료! " + q + "개, " +
+ (q * 13900).toLocaleString() + "원"
+ : "수량은 1~5개로 입력하세요.";
+}
+</script>
+</body>
+</html>
