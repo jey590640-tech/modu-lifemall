@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>라이프몰 예약관리 연습</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f5f7f6;margin:0;padding:25px}
+main{max-width:650px;margin:auto;background:white;padding:25px;border-radius:12px}
+h1{color:#24634f}input,button{box-sizing:border-box;width:100%;padding:12px;margin:7px 0;font-size:16px}
+button{background:#24634f;color:white;border:0;border-radius:6px;cursor:pointer}
+table{width:100%;border-collapse:collapse;margin-top:15px;font-size:14px}
+td,th{border:1px solid #ddd;padding:8px;text-align:left}
+small{color:#666}
+</style>
+</head>
+<body>
+<main>
+<h1>모두의 라이프몰</h1>
+<h2>예약 및 관리자 확인 연습 (3단계)</h2>
+<p>상품: 달잠 베개 고급형 / 13,900원</p>
+<label>수량 (1~5개)<input id="qty" type="number" min="1" max="5" value="1"></label>
+<label>예약자 이름<input id="name" placeholder="홍길동"></label>
+<label>전화번호 끝 4자리<input id="phone" maxlength="4" inputmode="numeric" placeholder="1234"></label>
+<label>입금자명<input id="payer" placeholder="홍길동"></label>
+<button onclick="saveOrder()">연습 예약 저장</button>
+<p id="notice" role="status"></p>
+<hr>
+<h2>관리자 예약 목록 (연습용)</h2>
+<button onclick="showOrders()">예약 목록 새로 보기</button>
+<div style="overflow-x:auto"><table><thead><tr><th>예약자</th><th>끝 4자리</th><th>수량</th><th>금액</th><th>입금자</th></tr></thead><tbody id="orders"></tbody></table></div>
+<p><small>이 프로그램은 연습용입니다. 이 브라우저에만 저장되며 다른 기기와 공유되지 않습니다. 실제 고객정보나 입금정보를 입력하지 마세요. 공개된 웹페이지이므로 실제 관리자용으로 사용하면 안 됩니다.</small></p>
+</main>
+<script>
+const key='lifemall_practice_orders_v1';
+function getOrders(){try{return JSON.parse(localStorage.getItem(key)||'[]')}catch(e){return []}}
+function saveOrder(){
+const q=Number(document.getElementById('qty').value);
+const n=document.getElementById('name').value.trim();
+const p=document.getElementById('phone').value.trim();
+const a=document.getElementById('payer').value.trim();
+const out=document.getElementById('notice');
+if(!Number.isInteger(q)||q<1||q>5||!n||!/^\d{4}$/.test(p)||!a){out.textContent='수량, 이름, 전화번호 끝 4자리, 입금자명을 확인하세요.';return}
+const arr=getOrders();arr.push({q,n,p,a});localStorage.setItem(key,JSON.stringify(arr));
+out.textContent='연습 예약이 저장되었습니다. 금액: '+(q*13900).toLocaleString()+'원';
+showOrders();
+}
+function showOrders(){
+const body=document.getElementById('orders');body.textContent='';
+const arr=getOrders();
+if(!arr.length){const tr=document.createElement('tr');const td=document.createElement('td');td.colSpan=5;td.textContent='아직 연습 예약이 없습니다.';tr.appendChild(td);body.appendChild(tr);return}
+arr.forEach(o=>{const tr=document.createElement('tr');[o.n,o.p,o.q,(o.q*13900).toLocaleString()+'원',o.a].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.appendChild(td)});body.appendChild(tr)})
+}
+showOrders();
+</script>
+</body>
+</html>
