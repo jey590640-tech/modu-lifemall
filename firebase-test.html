@@ -9,6 +9,7 @@
 <script type="module">
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";  
   // TODO: Add SDKs for Firebase products that you want to use
   // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -24,9 +25,13 @@
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-console.log("Firebase 초기화 코드 실행 완료");
+const db = getFirestore(app);
+const reservationsRef = collection(db, "reservations");  
+const snapshot = await getDocs(reservationsRef);  
+document.getElementById("result").textContent = "예약 건수: " + snapshot.size; 
+  console.log("Firebase 초기화 코드 실행 완료");
 </script>
-
+<p id="result">예약 정보 확인 준비 중...</p>
 <h2>모두의 라이프몰 연결 테스트</h2>
 <p>Firebase 연결을 확인하는 연습 페이지입니다.</p>
 </body>
