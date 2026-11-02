@@ -41,6 +41,10 @@ document.getElementById("result").textContent = "예약 건수: " + snapshot.siz
 <button id="loginBtn">로그인</button>
 <p id="loginResult"></p>  
 <script type="module">
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import { getApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+const app = getApp();
+const auth = getAuth(app);  
  const auth = getAuth(app);
 const loginBtn = document.getElementById("loginBtn");
 loginBtn.addEventListener("click", async () => {
