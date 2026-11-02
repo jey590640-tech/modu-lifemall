@@ -9,7 +9,8 @@
 <script type="module">
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";  
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";  
   // TODO: Add SDKs for Firebase products that you want to use
   // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -34,5 +35,24 @@ document.getElementById("result").textContent = "예약 건수: " + snapshot.siz
 <p id="result">예약 정보 확인 준비 중...</p>
 <h2>모두의 라이프몰 연결 테스트</h2>
 <p>Firebase 연결을 확인하는 연습 페이지입니다.</p>
+<h3>관리자 로그인</h3>
+<input id="email" type="email" placeholder="이메일">
+<input id="password" type="password" placeholder="비밀번호">
+<button id="loginBtn">로그인</button>
+<p id="loginResult"></p>  
+<script type="module">
+ const auth = getAuth(app);
+const loginBtn = document.getElementById("loginBtn");
+loginBtn.addEventListener("click", async () => {
+const email = document.getElementById("email").value;
+const password = document.getElementById("password").value;
+try {
+await signInWithEmailAndPassword(auth, email, password);
+document.getElementById("loginResult").textContent = "로그인 성공!";
+} catch (error) {
+document.getElementById("loginResult").textContent = "로그인 실패: " + error.code;
+}
+});
+</script>  
 </body>
 </html>
