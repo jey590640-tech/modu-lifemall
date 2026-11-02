@@ -45,7 +45,7 @@ import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/fir
 import { getApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
 const app = getApp();
 const auth = getAuth(app);  
- const auth = getAuth(app);
+
 const loginBtn = document.getElementById("loginBtn");
 loginBtn.addEventListener("click", async () => {
 const email = document.getElementById("email").value;
