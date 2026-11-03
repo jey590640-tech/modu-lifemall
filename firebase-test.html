@@ -46,7 +46,7 @@ import { getApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";  
 const app = getApp();
 const auth = getAuth(app);  
-
+const ADMIN_UID = "VDBMg4PIuRZzvRLOjnzTmlqyhC22";
 const loginBtn = document.getElementById("loginBtn");
 loginBtn.addEventListener("click", async () => {
 const email = document.getElementById("email").value;
