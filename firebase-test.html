@@ -59,6 +59,7 @@ const snapshot = await getDocs(reservationsRef);
 document.getElementById("result").textContent = "예약 건수: " + snapshot.size;
   
 } catch (error) {
+console.error(error);  
 document.getElementById("loginResult").textContent = "로그인 실패: " + error.code;
 }
 });
