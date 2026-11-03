@@ -43,6 +43,7 @@ const reservationsRef = collection(db, "reservations");
 <script type="module">
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 import { getApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";  
 const app = getApp();
 const auth = getAuth(app);  
 
