@@ -24,9 +24,23 @@ import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-aut
 import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 // 관리자 로그인 상태 확인 준비
-const app = initializeApp(firebaseConfig); 
+const firebaseConfig = {
+    apiKey: "AIzaSyBCCgUBCuVyV6foO-Fn36HxktnKytK7hcc",
+    authDomain: "modu-lifemall.firebaseapp.com",
+    projectId: "modu-lifemall",
+    storageBucket: "modu-lifemall.firebasestorage.app",
+    messagingSenderId: "292905385866",
+    appId: "1:292905385866:web:0cc50da9d5ddb8bf02d273"
+  };
+ const app = initializeApp(firebaseConfig); 
 const auth = getAuth();
 const db = getFirestore();
+const reservationsRef = collection(db, "reservations");
+onAuthStateChanged(auth, async (user) => {
+if (!user) return;
+const snapshot = await getDocs(reservationsRef);
+console.log("예약 건수:", snapshot.size);
+}); 
  
 </script> 
 </body>
