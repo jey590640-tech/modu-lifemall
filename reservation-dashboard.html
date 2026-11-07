@@ -17,5 +17,16 @@ h1{color:#1768bd}table{width:100%;border-collapse:collapse}th,td{border:1px soli
 <h2>예약 현황</h2>
 <table><thead><tr><th>예약자</th><th>전화번호 끝 4자리</th><th>상품</th><th>수량</th><th>금액</th><th>입금</th><th>수령</th></tr></thead><tbody><tr><td colspan="7">관리자 인증 및 예약정보 연결 전입니다.</td></tr></tbody></table>
 </main>
+<script type="module">
+// Firebase 연결 준비
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+// 관리자 로그인 상태 확인 준비
+const auth = getAuth();
+const db = getFirestore();
+ 
+</script> 
 </body>
 </html>
