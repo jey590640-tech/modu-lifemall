@@ -24,6 +24,7 @@ import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-aut
 import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 // 관리자 로그인 상태 확인 준비
+const app = initializeApp(firebaseConfig); 
 const auth = getAuth();
 const db = getFirestore();
  
