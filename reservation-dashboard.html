@@ -40,6 +40,34 @@ onAuthStateChanged(auth, async (user) => {
 if (!user) return;
 const snapshot = await getDocs(reservationsRef);
 console.log("예약 건수:", snapshot.size);
+const tbody = document.querySelector("tbody");
+tbody.replaceChildren();
+snapshot.forEach((doc) => { 
+const data = doc.data();
+const row = document.createElement("tr");
+const cell = document.createElement("td");
+cell.textContent = data.customerName || "-";
+row.appendChild(cell);
+const phoneCell = document.createElement("td");
+phoneCell.textContent = data.phoneLast4 || "-";
+row.appendChild(phoneCell);
+const productCell = document.createElement("td");
+productCell.textContent = data.productName || "-";
+row.appendChild(productCell);
+const quantityCell = document.createElement("td");
+quantityCell.textContent = data.quantity ?? "-";
+row.appendChild(quantityCell);
+const amountCell = document.createElement("td");
+amountCell.textContent = data.amount ?? "-";
+row.appendChild(amountCell);
+const paymentCell = document.createElement("td");
+paymentCell.textContent = data.paymentStatus || "미확인";
+row.appendChild(paymentCell);
+const pickupCell = document.createElement("td");
+pickupCell.textContent = data.pickupStatus || "미수령";
+row.appendChild(pickupCell);
+tbody.appendChild(row);
+}); 
 }); 
  
 </script> 
