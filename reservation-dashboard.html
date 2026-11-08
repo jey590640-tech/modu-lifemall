@@ -16,7 +16,9 @@ h1{color:#1768bd}table{width:100%;border-collapse:collapse}th,td{border:1px soli
 <p class="notice">관리자 전용 예약 현황입니다. 예약정보는 관리자 로그인 후 표시됩니다.</p>
 <h2>예약 현황</h2>
 <div id="admin-only" hidden>
- <table><thead><tr><th>예약자</th><th>전화번호 끝 4자리</th><th>상품</th><th>수량</th><th>금액</th><th>입금</th><th>수령</th></tr></thead><tbody><tr><td colspan="7">관리자 인증 및 예약정보 연결 전입니다.</td></tr></tbody></table>
+<!-- 관리자 인증 전에는 예약정보를 표시하지 않습니다 -->
+ 
+<table><thead><tr><th>예약자</th><th>전화번호 끝 4자리</th><th>상품</th><th>수량</th><th>금액</th><th>입금</th><th>수령</th></tr></thead><tbody><tr><td colspan="7">관리자 인증 및 예약정보 연결 전입니다.</td></tr></tbody></table>
 </div>
 </main>
 <script type="module">
@@ -40,6 +42,7 @@ const db = getFirestore();
 const reservationsRef = collection(db, "reservations");
 onAuthStateChanged(auth, async (user) => {
 if (!user) return;
+if (user.uid !== "VDBMg4PIuRZzvRLOjnzTmlqyhC22") return; 
 const snapshot = await getDocs(reservationsRef);
 console.log("예약 건수:", snapshot.size);
 const tbody = document.querySelector("tbody");
