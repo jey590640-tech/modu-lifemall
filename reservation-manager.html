@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>모두의 라이프몰 | 예약관리</title>
+<style>
+body{font-family:system-ui,'Malgun Gothic',sans-serif;max-width:900px;margin:35px auto;padding:0 18px;background:#f6f8fb;color:#172334}h1{font-size:26px}.panel{background:white;padding:22px;border-radius:12px;box-shadow:0 2px 12px #0001;margin:18px 0}input{display:block;width:100%;max-width:390px;box-sizing:border-box;padding:12px;margin:10px 0;border:1px solid #bac3ce;border-radius:7px;font-size:16px}button{background:#126b50;color:white;border:0;border-radius:7px;padding:12px 20px;font-size:16px;cursor:pointer}button:disabled{opacity:.5}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px;border-bottom:1px solid #e1e5ea;overflow-wrap:anywhere}th{background:#f3f5f7}.scroll{overflow-x:auto}.muted{color:#596778}#records{display:none}#logout{background:#536170}#status{white-space:pre-wrap}
+</style>
+</head>
+<body>
+<h1>모두의 라이프몰 예약관리</h1>
+<p class="muted">관리자 전용 · 예약정보 읽기 전용</p>
+<div class="panel" id="loginBox">
+<h2>관리자 로그인</h2>
+<input id="email" type="email" autocomplete="username" placeholder="관리자 이메일">
+<input id="password" type="password" autocomplete="current-password" placeholder="비밀번호">
+<button id="login">로그인하고 예약 조회</button>
+</div>
+<div class="panel" id="records">
+<h2>예약 목록 <span id="count"></span></h2>
+<p class="muted">예약정보는 조회만 가능합니다. 수정·삭제·입금확인은 아직 지원하지 않습니다.</p>
+<div class="scroll"><table><thead><tr><th>예약자</th><th>전화번호 끝 4자리</th><th>상품</th><th>수량</th></tr></thead><tbody id="rows"></tbody></table></div>
+<p><button id="refresh">새로 조회</button> <button id="logout">로그아웃</button></p>
+</div>
+<p id="status" role="status" aria-live="polite">연결 준비 중...</p>
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js';
+import {getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js';
+import {getFirestore,collection,getDocs} from 'https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js';
+const $=id=>document.getElementById(id);
+const status=message=>$('status').textContent=message;
+let auth,db;
+try{
+  // 기존 연결 테스트 파일에 공개된 Firebase 웹 앱 설정을 재사용합니다.
+  const response=await fetch('./firebase-test.html',{cache:'no-store'});
+  if(!response.ok) throw new Error('기존 연결 테스트 파일을 읽을 수 없습니다.');
+  const source=await response.text();
+  const keys=['apiKey','authDomain','projectId','storageBucket','messagingSenderId','appId'];
+  const config={};
+  for(const key of keys){
+    const match=source.match(new RegExp('\\b'+key+'\\s*:\\s*["\\\']([^"\\\']+)["\\\']'));
+    if(match)config[key]=match[1];
+  }
+  for(const key of ['apiKey','authDomain','projectId','appId']){
+    if(!config[key])throw new Error('Firebase 연결 설정('+key+')을 확인할 수 없습니다.');
+  }
+  const app=initializeApp(config);
+  auth=getAuth(app); db=getFirestore(app);
+  onAuthStateChanged(auth,user=>{
+    $('loginBox').style.display=user?'none':'block';
+    $('records').style.display=user?'block':'none';
+    if(user)loadReservations();else{ $('rows').replaceChildren();status('관리자 계정으로 로그인해 주세요.'); }
+  });
+  $('login').addEventListener('click',async()=>{
+    $('login').disabled=true;status('로그인 확인 중...');
+    try{await signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value);$('password').value='';}
+    catch(e){status('로그인에 실패했습니다. 이메일과 비밀번호를 확인해 주세요. ('+e.code+')');}
+    finally{$('login').disabled=false;}
+  });
+  $('refresh').addEventListener('click',loadReservations);
+  $('logout').addEventListener('click',()=>signOut(auth));
+}catch(e){status('연결 준비 실패: '+e.message);}
+async function loadReservations(){
+  status('예약정보를 안전하게 조회 중입니다...');
+  $('rows').replaceChildren();
+  try{
+    const snapshot=await getDocs(collection(db,'reservations'));
+    $('count').textContent='('+snapshot.size+'건)';
+    snapshot.forEach(doc=>{
+      const d=doc.data();
+      const tr=document.createElement('tr');
+      for(const value of [d.customerName??'-',d.phoneLast4??'-',d.productName??'-',d.quantity??'-']){
+        const td=document.createElement('td');td.textContent=String(value);tr.appendChild(td);
+      }
+      $('rows').appendChild(tr);
+    });
+    status('예약 '+snapshot.size+'건을 조회했습니다.');
+  }catch(e){status('예약 조회 실패: '+e.code+' — 관리자 권한과 Firestore 보안 규칙을 확인해 주세요.');}
+}
+</script>
+</body>
+</html>
