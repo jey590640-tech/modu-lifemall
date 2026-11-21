@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>모두의 라이프몰 - 상품관리 연습</title>
+<style>
+*{box-sizing:border-box}body{font-family:system-ui,'Malgun Gothic',sans-serif;background:#f4f7f6;color:#20312d;margin:0;padding:24px}main{max-width:880px;margin:auto}h1{font-size:26px}section{background:white;padding:22px;border-radius:14px;margin:18px 0;box-shadow:0 2px 10px #0001}.notice{background:#fff3d8;border-left:5px solid #e4a527;padding:12px;border-radius:6px}label{display:block;font-weight:650;margin-top:14px}input{width:100%;padding:12px;border:1px solid #b9c7c1;border-radius:8px;margin-top:5px;font-size:16px}button{border:0;border-radius:8px;padding:12px 18px;background:#08764f;color:white;font-weight:700;font-size:16px;cursor:pointer;margin-top:15px}.danger{background:#a83b3b}.small{font-size:13px;color:#54645f}.item{border-top:1px solid #dce5e0;padding:14px 0}.item strong{font-size:18px}.meta{line-height:1.8}#empty{color:#677}
+</style>
+</head>
+<body><main>
+<h1>모두의 라이프몰 상품관리</h1>
+<p class="notice"><strong>연습용 화면입니다.</strong> 등록한 상품은 이 브라우저에만 임시 저장됩니다. 고객 사이트, Firebase, 실제 예약·재고와 연결되지 않습니다. 이 페이지에는 실제 고객 개인정보를 입력하지 마세요.</p>
+<section><h2>연습 상품 등록</h2>
+<form id="form">
+<label>상품명<input name="name" required maxlength="100" placeholder="예: 달잠 베개 고급형"></label>
+<label>판매가격 (원)<input name="price" type="number" min="0" step="1" required></label>
+<label>판매 가능 수량 (개)<input name="stock" type="number" min="1" step="1" required></label>
+<label>예약 마감일<input name="deadline" type="date" required></label>
+<label>수령 시작일<input name="pickupStart" type="date" required></label>
+<label>수령 종료일<input name="pickupEnd" type="date" required></label>
+<button type="submit">연습 상품 등록</button>
+</form><p id="status" role="status"></p></section>
+<section><h2>등록한 연습 상품 <span id="count">(0개)</span></h2><div id="items"></div></section>
+<p class="small">보안 안내: 이 파일 자체에는 관리자 로그인 기능이 없습니다. GitHub Pages에 공개하면 누구나 페이지를 열 수 있으므로 실제 영업용 관리자 화면으로 사용하지 마세요.</p>
+</main>
+<script>
+(()=>{
+'use strict';
+const KEY='lifemall-product-manager-practice-v1';
+const form=document.getElementById('form');
+const status=document.getElementById('status');
+const items=document.getElementById('items');
+const count=document.getElementById('count');
+let products=[];
+try { const stored=JSON.parse(localStorage.getItem(KEY)||'[]');if(Array.isArray(stored))products=stored; } catch(e){status.textContent='저장된 연습 목록을 읽지 못했습니다.';}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(products));return true;}catch(e){status.textContent='브라우저 저장이 차단되었습니다.';return false;}};
+const line=(parent,text,cls)=>{const div=document.createElement('div');div.textContent=text;if(cls)div.className=cls;parent.appendChild(div);return div;};
+function render(){items.replaceChildren();count.textContent=`(${products.length}개)`;if(!products.length){line(items,'아직 등록한 연습 상품이 없습니다.','small');return;}
+products.forEach(p=>{const wrap=document.createElement('div');wrap.className='item';line(wrap,p.name,'name');wrap.firstChild.style.fontWeight='700';wrap.firstChild.style.fontSize='18px';line(wrap,`판매가격: ${Number(p.price).toLocaleString('ko-KR')}원 · 판매 가능 수량: ${p.stock}개`,'meta');line(wrap,`예약 마감: ${p.deadline} · 수령: ${p.pickupStart} ~ ${p.pickupEnd}`,'meta');const b=document.createElement('button');b.className='danger';b.type='button';b.textContent='연습 상품 삭제';b.addEventListener('click',()=>{if(!confirm('이 연습 상품을 삭제할까요?'))return;products=products.filter(x=>x.id!==p.id);save();render();});wrap.appendChild(b);items.appendChild(wrap);});}
+form.addEventListener('submit',e=>{e.preventDefault();const f=new FormData(form);const p=Object.fromEntries(f.entries());if(p.pickupStart>p.pickupEnd){status.textContent='수령 종료일은 시작일보다 빠를 수 없습니다.';return;}p.id=Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);products.unshift(p);if(save()){status.textContent='연습 상품을 등록했습니다. 이 브라우저에만 저장됩니다.';form.reset();}render();});
+render();
+})();
+</script></body></html>
