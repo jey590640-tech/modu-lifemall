@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>모두의 라이프몰 상품 연결 시험</title>
+<style>
+body {font-family:Arial,sans-serif; background:#f5f7fa; padding:20px;}
+main {max-width:600px; margin:auto; background:white; padding:24px; border-radius:12px;}
+h1 {color:#1768c4;}
+article {border:1px solid #ddd; padding:14px; margin-top:12px; border-radius:8px;}
+small {color:#a33;}
+</style>
+</head>
+<body>
+<main>
+<h1>모두의 라이프몰</h1>
+<h2>상품 연결 시험</h2>
+<p>관리자가 연습 등록한 상품을 확인합니다.</p>
+<small>이 브라우저에 저장된 연습 상품만 표시됩니다. 실제 예약은 불가능합니다.</small>
+<div id="products"></div>
+</main>
+<script>
+const output = document.getElementById("products");
+const keys = ["lifemall-practice-products"];
+let products = [];
+try {
+  products = JSON.parse(localStorage.getItem(keys[0]) || "[]");
+  if (!Array.isArray(products)) products = [];
+} catch (e) {
+  products = [];
+}
+if (products.length === 0) {
+  output.textContent = "등록된 연습 상품이 없습니다.";
+} else {
+  products.forEach(p => {
+    const card = document.createElement("article");
+    const name = document.createElement("h3");
+    name.textContent = p.name || p.productName || "상품명 미입력";
+    const info = document.createElement("p");
+    const price = Number(p.price || 0);
+    info.textContent = "판매가격: " + price.toLocaleString("ko-KR") + "원";
+    card.append(name, info);
+    output.appendChild(card);
+  });
+}
+</script>
+</body>
+</html>
