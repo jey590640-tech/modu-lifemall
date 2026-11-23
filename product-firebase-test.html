@@ -40,7 +40,13 @@ messagingSenderId: "292905385866",
 appId: "1:292905385866:web:0cc50da9d5ddb8bf02d273",  
 };
 const app = initializeApp(firebaseConfig);
-console.log("Firebase 초기화 완료");  
+console.log("Firebase 초기화 완료"); 
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+const db = getFirestore(app);
+const productRef = doc(db, "products", "nzwOOBaEFhF4kPncpUNu");
+const productSnap = await getDoc(productRef);
+console.log("상품 조회 결과:", productSnap.exists() ? productSnap.data() : "상품 없음");
+if (productSnap.exists()) { const p = productSnap.data(); document.querySelector("main").textContent = `${p.name} / ${Number(p.price).toLocaleString("ko-KR")}원 / 재고 ${p.stock}개`; }  
 </script>  
 </body>
 </html>
