@@ -49,6 +49,13 @@ const productSnap = await getDocs(productRef);
 console.log("상품 조회 결과:", productSnap.size);
 
 productSnap.forEach((item) => { const p = item.data(); document.querySelector("main").innerHTML = `<h2>${p.name}</h2><p>판매가격: ${Number(p.price).toLocaleString("ko-KR")}원</p><p>재고: ${p.stock}개</p><button type="button">예약하기</button>`; });
+const reservationForm = document.createElement("div");
+reservationForm.style.display = "none";
+document.querySelector("main").appendChild(reservationForm);  
+reservationForm.innerHTML = '<h3>예약자 정보 입력</h3><input placeholder="닉네임"><input placeholder="전화번호 끝 4자리"><input type="number" min="1" placeholder="수량"><button type="button">예약 확인</button>';  
+reservationForm.style.display = "block";
+reservationForm.style.display = "none";
+document.querySelector("main button").addEventListener("click", () => { reservationForm.style.display = "block"; });
 document.querySelector("main").addEventListener("click", (e) => { if (e.target.tagName === "BUTTON") alert("예약 입력창 연결 테스트입니다."); });
 </script>  
 </body>
