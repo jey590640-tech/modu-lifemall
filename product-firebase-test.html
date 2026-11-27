@@ -48,7 +48,7 @@ const productRef = collection(db, "products");
 const productSnap = await getDocs(productRef);
 console.log("상품 조회 결과:", productSnap.size);
 
-productSnap.forEach((item) => { const p = item.data(); document.querySelector("main").innerHTML = `<h2>${p.name}</h2><p>판매가격: ${Number(p.price).toLocaleString("ko-KR")}원</p><p>재고: ${p.stock}개</p><button type="button">예약하기</button>`; });
+productSnap.forEach((item) => { const p = item.data();document.querySelector("main").dataset.stock = p.stock; document.querySelector("main").innerHTML = `<h2>${p.name}</h2><p>판매가격: ${Number(p.price).toLocaleString("ko-KR")}원</p><p>재고: ${p.stock}개</p><button type="button">예약하기</button>`; });
 const reservationForm = document.createElement("div");
 reservationForm.style.display = "none";
 document.querySelector("main").appendChild(reservationForm);  
@@ -59,8 +59,8 @@ document.querySelector("main button").addEventListener("click", () => { reservat
 
 reservationForm.querySelector("button").addEventListener("click", () => {
 const quantity = Number(reservationForm.querySelector('input[type="number"]').value);
-if (!Number.isInteger(quantity) || quantity < 1 || quantity > Number(p.stock)) {
-  alert("예약 수량은 1개부터 " + p.stock + "개까지 입력해 주세요.");
+if (!Number.isInteger(quantity) || quantity < 1 || quantity > Number(document.querySelector("main").dataset.stock)) {
+  alert("예약 수량은 1개부터 " +document.querySelector("main").dataset.stock + "개까지 입력해 주세요.");
   return;
 }
   alert("예약 확인 버튼이 정상 작동합니다. 아직 실제 예약은 저장되지 않았습니다.");
