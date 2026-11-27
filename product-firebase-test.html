@@ -56,7 +56,10 @@ reservationForm.innerHTML = '<h3>예약자 정보 입력</h3><input placeholder=
 reservationForm.style.display = "block";
 reservationForm.style.display = "none";
 document.querySelector("main button").addEventListener("click", () => { reservationForm.style.display = "block"; });
-document.querySelector("main").addEventListener("click", (e) => { if (e.target.tagName === "BUTTON") alert("예약 입력창 연결 테스트입니다."); });
+
+reservationForm.querySelector("button").addEventListener("click", () => {
+  alert("예약 확인 버튼이 정상 작동합니다. 아직 실제 예약은 저장되지 않았습니다.");
+});
 </script>  
 </body>
 </html>
