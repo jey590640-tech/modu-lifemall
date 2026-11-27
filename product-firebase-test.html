@@ -58,7 +58,8 @@ reservationForm.style.display = "none";
 document.querySelector("main button").addEventListener("click", () => { reservationForm.style.display = "block"; });
 
 reservationForm.querySelector("button").addEventListener("click", () => {
-  alert("예약 확인 버튼이 정상 작동합니다. 아직 실제 예약은 저장되지 않았습니다.");
+const quantity = Number(reservationForm.querySelector('input[type="number"]').value); if (!Number.isInteger(quantity) || quantity < 1 || quantity > Number(p.stock)) { alert("예약 수량은 1개부터 재고 " + p.stock + "개까지 입력해 주세요."); return; } 
+alert("예약 확인 버튼이 정상 작동합니다. 아직 실제 예약은 저장되지 않았습니다.");
 });
 </script>  
 </body>
